@@ -11,13 +11,16 @@ terraform {
     }
   }
 
-  backend "s3" {
-    bucket = "devops-demo-terraform-state"
-    key    = "prod/terraform.tfstate"
-    region = "us-east-1"
-    # Uncomment for state locking
-    # dynamodb_table = "terraform-state-lock"
-  }
+  # Remote state backend configuration
+  # Uncomment after creating the S3 bucket and DynamoDB table
+  # Instructions: See docs/TERRAFORM.md for setup steps
+  # backend "s3" {
+  #   bucket         = "devops-demo-terraform-state"  # Create this bucket first
+  #   key            = "prod/terraform.tfstate"
+  #   region         = "us-east-1"
+  #   dynamodb_table = "terraform-state-lock"  # Create this table for locking
+  #   encrypt        = true
+  # }
 }
 
 provider "aws" {
@@ -29,6 +32,22 @@ provider "aws" {
       Project     = "DevOps-Demo"
       ManagedBy   = "Terraform"
     }
+  }
+}
+
+# Data source to fetch latest Ubuntu 22.04 LTS AMI
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"]  # Canonical
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
 }
 
@@ -136,7 +155,7 @@ resource "aws_security_group" "app" {
 
 # EC2 Instance
 resource "aws_instance" "app" {
-  ami                    = var.ami_id
+  ami                    = var.ami_id != "" ? var.ami_id : data.aws_ami.ubuntu.id
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.app.id]

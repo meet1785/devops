@@ -45,11 +45,14 @@ tar -czf "$BACKUP_PATH/configs.tar.gz" \
     2>/dev/null || print_warning "Some config files not found"
 
 # Backup Docker volumes
+# Note: Volume names use the format <project_name>_<volume_name>
+# Default project name from docker-compose.yml is the directory name
 print_info "Backing up Docker volumes..."
-docker run --rm -v devops_prometheus-data:/data -v "$BACKUP_PATH":/backup \
+PROJECT_NAME=$(basename "$(pwd)")
+docker run --rm -v ${PROJECT_NAME}_prometheus-data:/data -v "$BACKUP_PATH":/backup \
     alpine tar -czf /backup/prometheus-data.tar.gz -C /data . 2>/dev/null || print_warning "Prometheus volume not found"
 
-docker run --rm -v devops_grafana-data:/data -v "$BACKUP_PATH":/backup \
+docker run --rm -v ${PROJECT_NAME}_grafana-data:/data -v "$BACKUP_PATH":/backup \
     alpine tar -czf /backup/grafana-data.tar.gz -C /data . 2>/dev/null || print_warning "Grafana volume not found"
 
 # Create backup manifest

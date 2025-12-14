@@ -35,9 +35,9 @@ variable "instance_type" {
 }
 
 variable "ami_id" {
-  description = "AMI ID for EC2 instance (Ubuntu 22.04 LTS)"
+  description = "AMI ID for EC2 instance (Ubuntu 22.04 LTS). Leave empty to use latest."
   type        = string
-  default     = "ami-0c7217cdde317cfec"  # Ubuntu 22.04 LTS in us-east-1
+  default     = ""  # Will be fetched dynamically if empty
 }
 
 variable "key_name" {
@@ -47,7 +47,7 @@ variable "key_name" {
 }
 
 variable "allowed_ssh_cidrs" {
-  description = "CIDR blocks allowed to SSH"
+  description = "CIDR blocks allowed to SSH. IMPORTANT: Change this to your IP for security!"
   type        = list(string)
-  default     = ["0.0.0.0/0"]  # Change this to your IP for security
+  default     = ["10.0.0.0/32"]  # Placeholder - MUST be changed to your actual IP
 }
