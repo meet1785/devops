@@ -1,0 +1,15 @@
+[Unit]
+Description=DevOps Demo Application
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+WorkingDirectory={{ app_dir }}
+Environment="PATH={{ app_dir }}/venv/bin"
+ExecStart={{ app_dir }}/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 4 app:app
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

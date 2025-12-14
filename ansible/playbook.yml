@@ -1,0 +1,104 @@
+---
+# Ansible Playbook for Setting up DevOps Demo Application
+- name: Setup DevOps Demo Application
+  hosts: app_servers
+  become: yes
+  vars:
+    app_user: devops
+    app_dir: /opt/devops-demo
+    python_version: "3.11"
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install required system packages
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - python3-venv
+          - git
+          - docker.io
+          - docker-compose
+          - nginx
+        state: present
+
+    - name: Create application user
+      user:
+        name: "{{ app_user }}"
+        shell: /bin/bash
+        home: "/home/{{ app_user }}"
+        createhome: yes
+
+    - name: Add user to docker group
+      user:
+        name: "{{ app_user }}"
+        groups: docker
+        append: yes
+
+    - name: Create application directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0755'
+
+    - name: Clone application repository
+      git:
+        repo: https://github.com/meet1785/devops.git
+        dest: "{{ app_dir }}"
+        version: main
+        force: yes
+      become_user: "{{ app_user }}"
+
+    - name: Install Python dependencies
+      pip:
+        requirements: "{{ app_dir }}/app/requirements.txt"
+        virtualenv: "{{ app_dir }}/venv"
+        virtualenv_command: python3 -m venv
+      become_user: "{{ app_user }}"
+
+    - name: Create systemd service file
+      template:
+        src: templates/devops-app.service.j2
+        dest: /etc/systemd/system/devops-app.service
+        mode: '0644'
+
+    - name: Enable and start Docker service
+      systemd:
+        name: docker
+        enabled: yes
+        state: started
+
+    - name: Start application using docker-compose
+      docker_compose:
+        project_src: "{{ app_dir }}"
+        state: present
+      become_user: "{{ app_user }}"
+
+    - name: Configure firewall
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop:
+        - '22'
+        - '80'
+        - '443'
+        - '5000'
+
+    - name: Enable firewall
+      ufw:
+        state: enabled
+        policy: deny
+
+  handlers:
+    - name: Restart application
+      systemd:
+        name: devops-app
+        state: restarted
+        daemon_reload: yes
