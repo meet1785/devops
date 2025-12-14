@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Demo Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+        
+        .section {
+            margin: 30px 0;
+        }
+        
+        .section h2 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .topics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .topic {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        
+        .topic:hover {
+            transform: translateY(-5px);
+        }
+        
+        .endpoints {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .endpoint {
+            background: white;
+            padding: 10px 15px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .status {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 DevOps Demo Application</h1>
+        <p class="subtitle">Your Complete DevOps Practice Environment</p>
+        <span class="status">✓ Application Running</span>
+        
+        <div class="section">
+            <h2>📚 DevOps Topics Covered</h2>
+            <div class="topics">
+                <div class="topic">🐳 Docker</div>
+                <div class="topic">☸️ Kubernetes</div>
+                <div class="topic">🔄 CI/CD</div>
+                <div class="topic">🏗️ Terraform</div>
+                <div class="topic">📊 Monitoring</div>
+                <div class="topic">🔧 Ansible</div>
+                <div class="topic">📜 Shell Scripts</div>
+                <div class="topic">☁️ Cloud (AWS/Azure)</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🔗 API Endpoints</h2>
+            <div class="endpoints">
+                <div class="endpoint">GET / - Home page</div>
+                <div class="endpoint">GET /health - Health check endpoint</div>
+                <div class="endpoint">GET /info - System information</div>
+                <div class="endpoint">GET /api/status - API status</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🎯 Getting Started</h2>
+            <p style="line-height: 1.6; color: #666;">
+                This repository contains a complete DevOps practice environment. 
+                Explore the different folders to learn Docker, Kubernetes, CI/CD pipelines, 
+                Infrastructure as Code, monitoring, and more. Each component is documented 
+                with examples and best practices.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
